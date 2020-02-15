@@ -1,1 +1,1 @@
-initial commit
+An open source game project.
