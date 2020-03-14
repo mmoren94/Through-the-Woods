@@ -1,0 +1,63 @@
+Decided on a "pacman" data model. The map consists of tiles. Some of which are traversible to the player. Others are only traversible to the "ghosts" or in this case the forest imps. Map will be read directly from a file. All world state will be on the world file. World files will function like save files. For simplicity sake I have a single save file that gets loaded and modified each playthrough.
+
+---
+
+The objective of the game is to make it from the start to the end of the maze without being caught by the forest imps.
+
+---
+
+The game engine will only be able to handle single-width paths for the player.
+
+---
+
+I originally went with a graph-based map but decided on a simple grid/tile approach. This gave me several advantages.
+
+---
+
+With a grid-based map I can easily do line-of-sight checks for entities.
+
+---
+
+Grid-based map lets me store the map in a image file, as well as other important information. I can store the entire game state in one file.
+
+---
+
+The data from the world image files will be managed in 32x32 "pizzas". A few conventions:
+- 1-indexing to play nice with Lua
+- Row major
+- Pizza (1,1) contains setup info. Map dictionary, etc.
+- Pizza (1,2) is the world map proper.
+
+---
+
+The world map itself contains these "terrain tile" types:
+
+-Maze Start
+-Water Hazard
+-Beaten Path
+-Bush
+-Flower Field
+-Log over water
+-Bridge over water
+-Finish
+-Ravine Hazard
+
+---
+
+There is an implict layer of canopy "over" any non-hazard terrain that extends in a 3x3 block over said non-hazard terrain tile.
+
+---
+
+Players may "climb up into" the canopy while in a Bush tile.
+
+---
+
+Players can climb very high in the canopy but it is dangerous and slow. Climbing high enough will let the player see what direction the finish is relative to their position.
+
+---
+
+Players can "Look below" when in the canopy at any entities on the tile below them.
+
+---
+
+There is a high chance of a branch breaking, slipping and falling while in the canopy. If the player falls over non-hazard terrain they might get injured. Falling from the canopy while over hazard terrain will be gameover.
